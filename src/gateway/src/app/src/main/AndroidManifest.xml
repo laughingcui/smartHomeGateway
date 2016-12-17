@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.everyoo.gatewaylitedaemon">
+
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="ANDROID.PERMISSION.MASTER_CLEAR" />
+    <uses-permission android:name="ANDROID.PERMISSION.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+    <uses-permission android:name="android.permission.SET_TIME_ZONE" />
+
+    <uses-feature
+        android:name="android.hardware.usb.host"
+        android:required="true" />
+    <application
+        android:name="com.everyoo.smartgateway.smartgateway.InitApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:persistent="true"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.NoTitleBar"> <!-- persistent属性可以保证该应用开机自启动和异常自动重启 -->
+
+        <activity
+            android:name="com.everyoo.smartgateway.smartgateway.MainActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+
+        <service
+            android:name="com.everyoo.smartgateway.everyoocore.message.core.ThreadPoolService"
+            android:enabled="true"
+            android:exported="true"></service>
+        <service
+            android:name="com.everyoo.smartgateway.everyoosip.PjsipService"
+            android:enabled="true"
+            android:exported="true"></service>
+        <service
+            android:name="com.everyoo.smartgateway.everyoocore.message.core.BindService"
+            android:enabled="true"
+            android:exported="true"></service>
+        <service android:name="com.everyoo.smartgateway.everyoocore.networkobserver.NetworkService" />
+        <service android:name="com.everyoo.smartgateway.everyoocore.timer.TimingService" />
+        <service android:name="com.everyoo.smartgateway.everyoocore.message.processor.HttpService" />
+        <service android:name="com.everyoo.smartgateway.everyoocore.upgrade.UpgradeService" />
+
+        <receiver android:name="com.everyoo.smartgateway.everyoozwave.zwavesdk.SdkBroadReceiver">
+            <intent-filter>
+                <action android:name="action.download.sdk.message" />
+            </intent-filter>
+        </receiver>
+        <!-- 升级广播 -->
+        <receiver android:name="com.everyoo.smartgateway.everyoocore.upgrade.UpgradeReceiver">
+            <intent-filter>
+                <action android:name="com.everyoo.intent.action.START_UPDATE" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.everyoo.smartgateway.everyoocore.message.core.LinkageReceiver">
+            <intent-filter>
+                <action android:name="action.sendto.linkagereceiver" />
+            </intent-filter>
+        </receiver>
+
+        <!-- 开机广播 和 覆盖安装广播-->
+        <receiver android:name="com.everyoo.smartgateway.everyoocore.networkobserver.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+        <!-- <receiver android:name="com.everyoo.smartgateway.broadcast.TimingReceiver">
+             <intent-filter>
+                 <action android:name="com.everyoo.intent.action.network.heart"/>
+             </intent-filter>
+         </receiver>-->
+
+        <!-- <receiver android:name="com.everyoo.smartgateway.everyoocore.networkobserver.NetworkReceiver">
+             <intent-filter>
+                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                 <action android:name="android.net.wifi.STATE_CHANGE" />
+             </intent-filter>
+         </receiver>-->
+
+    </application>
+
+</manifest>
